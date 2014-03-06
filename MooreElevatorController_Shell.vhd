@@ -103,8 +103,6 @@ begin
 					floor_state <= floor1;
 			end case;
 		end if;
-	else
-		floor_state <= floor1;
 	end if;
 end process;
 
