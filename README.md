@@ -1,0 +1,20 @@
+# ECE 281 CE3 README
+Advanced Elevator Controller
+
+## Moore Machine
+#### Synthesis
+The first step was to create a Moore machine to control the elevator. With the supplied shell the machine was easy enough to program "from scratch" - that is, the simplicity of the machine did not require the use of multiple steps to be completed. It can sometimes be dangerous to assume that you have the correct answer without using equations as an intermediate step, but in this case the machine was incredibly simple and physically writing equations was a redundancy. Using the supplied shell, I had only to create next state logic for the third and fourth floor states. The only logic needed was to say that the elevator should only move up or down when stop had a value of '0' and would move with up_down's value of '0' or '1', respectively. Obviously on the fourth floor the elevator cannot move up, so the elevator would only move with a value of '0' for up_down and, obviously, a '0' for stop. Inputting this logic into the shell completed the next state logic and subsequently the circuit.
+
+#### Moore Testbench
+![alt text](https://raw.github.com/ChrisMKiernan/ECE281_CE3/master/Moore_testbench_picture.PNG "The testbench waveform for the Moore Machine")
+
+Above is the testbench waveform generated for the Moore Machine. To create this, a new kind of testbench was written that this time included clocks. Working with a clock is very simple, especially with the `wait for clk_period*2` function,which allows us to wat for a certain number of clock cycles instead of calculating the number of ns that we must wait. This was the main difference between a combinational logic testbench and a sequential testbench: the output only changes with the change of the clock. Because of this, waiting for clock cycles as opposed to waiting for a certain amount of time is especially relevant. The above waveform is correct becasue even thought the "up_down" button has a value of '1', the floor doesn't change until the rising edge of clock passes. The elevator stays on each floor for 2 clock cycles with the stop button pressed, and when the stop button is released, the elevator again does not move until the clock changes. The final descent of the elevator also shows that the machine is effetive: it moves down one floor at a time, even though there should be no stops, it essentially stops at each floor for one clock cycle because the elevator cannot move more than one floor at a time.
+
+## Mealy Machine
+#### Synthesis
+What separates a Mealy Machine from a Moore is that the Maley Machine has one or more inputs bypass the register and the clock and move straight to the the output logic. This means that the output depends on the current state and inputs that may curently be used. For this reason, the actual next state logic and state memory stayed the same between the Moore and Mealy Machines. The output logic, however, changed between the two. I decided that my machine would be sensitive to the "reset" button at any time, not just during the clock cycle. For this, I actually put a qualifying statement into the output logic that allowed for the reset button to be pressed and the output to change based on that button. 
+
+#### Testbench
+![alt text](https://raw.github.com/ChrisMKiernan/ECE281_CE3/master/Mealy_testbench_picture.PNG "The testbench waveform for the Mealy Machine")
+
+Above it the result of the testbench created for the Mealy Machine. When I created the testbench for this machine I first started with an identical testbench to the Moore Machine, to first ensure that my elevator worked as desired without the reset button being pressed. I then created a line where I wasmving the elevator up and decided in the middle of the clock cycle to use the reset button. The result, as you can see above (372 ns, reset = '1' and floor immediately changes to "0001"), is that the elevator immediately changed floors without waiting for the clock. This shows that the output of the machine is dependent upon the current input, not just dependent on the state that it is in. 
